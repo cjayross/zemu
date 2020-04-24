@@ -1,4 +1,5 @@
-QEMU_CONFIG=${QEMU_CONFIG:-$HOME/.config/qemu}
+typeset -gx QEMU_CONFIG=${QEMU_CONFIG:-$HOME/.config/qemu}
+
 if [[ ! -d $QEMU_CONFIG ]]; then
     mkdir -p $QEMU_CONFIG
 fi
@@ -32,12 +33,14 @@ zemu() {
     if (( $# == 0 )); then
         echo 'zemu: missing configuration.'
         exit 1
-    elif (( $# > 1 )); then
-        echo 'zemu: trailing arguments.'
-        exit 1
     fi
 
-    qemu-system-x86_64 -readconfig $QEMU_CONFIG'/'$1'.conf'
+    local config=$QEMU_CONFIG'/'$1'.conf'
+    local filtered_config=`mktemp /tmp/$1.XXXXXX`
+    shift
+    cat $config | sed 's/$QEMU/'${QEMU//\//\\\/}'/g' > $filtered_config
+    qemu-system-x86_64 -readconfig $filtered_config $*
+    rm $filtered_config
 }
 
 compdef _zemu zemu
