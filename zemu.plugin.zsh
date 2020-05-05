@@ -37,9 +37,11 @@ zemu() {
 
     local config=$QEMU_CONFIG'/'$1'.conf'
     local filtered_config=`mktemp /tmp/$1.XXXXXX`
+    local vga=${QEMU_VGA:+-vga}
+    local display=${QEMU_DISPLAY:+-display}
     shift
     cat $config | sed 's/$QEMU/'${QEMU//\//\\\/}'/g' > $filtered_config
-    qemu-system-x86_64 -readconfig $filtered_config $*
+    qemu-system-x86_64 -readconfig $filtered_config $vga $QEMU_VGA $display $QEMU_DISPLAY $*
     rm $filtered_config
 }
 
