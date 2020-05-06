@@ -41,7 +41,7 @@ zemu() {
     local display=${QEMU_DISPLAY:+-display}
     shift
     cat $config | sed 's/$QEMU/'${QEMU//\//\\\/}'/g' > $filtered_config
-    qemu-system-x86_64 -readconfig $filtered_config $vga $QEMU_VGA $display $QEMU_DISPLAY $*
+    qemu-system-x86_64 -daemonize -readconfig $filtered_config $vga $QEMU_VGA $display $QEMU_DISPLAY $*
     rm $filtered_config
 }
 
