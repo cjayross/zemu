@@ -32,7 +32,7 @@ zemu() {
 
     if (( $# == 0 )); then
         echo 'zemu: missing configuration.'
-        exit 1
+        return 1
     fi
 
     local config=$QEMU_CONFIG'/'$1'.conf'
